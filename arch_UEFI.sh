@@ -229,7 +229,7 @@ insatall_arch(){
 		arch-chroot /mnt bootctl --path=/boot install
 		echo -e "default  arch\ntimeout  5\neditor  0" > /mnt/boot/loader/loader.conf
 		partuuid=$(blkid -s PARTUUID -o value /dev/"$root")
-		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot=PARTUUID=${partuuid} rw" > /mnt/boot/loader/entries/arch.conf
+		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot=PARTUUID={$partuuid} rw" > /mnt/boot/loader/entries/arch.conf
   print_info "Comprobando el archico loader.conf"
 		cat /mnt/boot/loader/loader.conf
 		sleep 1
