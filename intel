@@ -1,0 +1,20 @@
+lspci -k | grep -EA3 'VGA|3D|Display'
+
+
+sudo pacman -S
+mesa lib32-mesa
+lib32-libva-intel-driver
+lib32-vulkan-intel
+intel-ucode
+xf86-video-intel
+vulkan-intel
+iucode-tool (--needed) --> no descarga archivos repetidos
+
+
+## Aceleracion por hardware Intel
+intel-media-driver
+libva-intel-driver
+libva-vdpau-driver
+libvdpau-va-gl
+libva-utils
+vdpauinfo

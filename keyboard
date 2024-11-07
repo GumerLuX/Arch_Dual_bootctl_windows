@@ -1,0 +1,18 @@
+ CODIGO   PAIS               LOCALES
+
+ "be"    "Belarusian"       \ [be_BY]
+ "de"    "German"           \ [de_DE]*
+ "el"    "Greek"            \ [el_GR]*
+ "es"    "Español"          \ [es_ES]*
+ "fr"    "French"           \ [fr_FR]*
+ "hu"    "Hungarian"        \ [hu_HU]*
+ "it"    "Italian"          \ [it_IT]*
+ "pt"    "Portugal"         \ [pt_PT]*
+ "ro"    "Romanian"         \ [ro_RO]
+ "ru"    "Russian"          \ [ru_RU]*
+ "sl"    "Slovenian"        \ [sl_SI]*
+ "sv"    "Swedish"          \ [sv_SE]
+ "uk"    "United Kingdom"   \ [en_GB]*
+ "us"    "United States"    \ [en_US]*
+ "zh"    "Chino Tr. Taiwán" \ [zh_TW]*
+* Consultar lista de codigos, para otras regiones del pais:
