@@ -18,3 +18,11 @@ libva-vdpau-driver
 libvdpau-va-gl
 libva-utils
 vdpauinfo
+
+#archivi configuración de booctl arch.conf
+
+title ArchLinux
+linux /vmlinuz-linux
+initrd /intel-ucode.img 
+initrd /initramfs-linux.img
+options root=PARTUUID=xxxxxx xxxxx xxxxx xxxxx rw
