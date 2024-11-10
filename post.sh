@@ -1,79 +1,14 @@
 #!/bin/bash
-#version: 0.2
-# https://github.com/GumerLuX/arch1.git
-#shellcheck disable=SC2162,SC2034,SC2120
+#Version:0.2 
+#Scrip de instalacion d Arch Linux con Windows, utilizando la particion boot de Windows existente.
+#Post configuracion de Root y usuario.
 
-#VARIABLES
-#checklist=( 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 )
-#es
-Bold=$(tput bold)
-Green="\e[0;32m\033[1m"
-Red="\e[0;31m\033[1m"
-Blue="\e[0;34m\033[1m"
-Yellow="\e[0;33m\033[1m"
-Cyan="\e[0;36m\033[1m"
-Cyan1="\e[1;36m\033[1m"
-Light="\e[96m\033[1m"
-Gray="\e[0;37m\033[1m"
-fin="\e[0m"
-BGreen=${Bold}${Green}
-Reset=$(tput sgr0)
-
-
-## Estilos
-print_line(){
-	printf "\e[1;34m%$(tput cols)s\n\e[0m"|tr ' ' '-'
-}
-
-write_header(){
-	clear
-	print_line
-	echo -e "#${Gray}$1${fin}"
-	print_line
-	echo ""
-}
-
-print_info(){
-	echo -e "${Green}$1${fin}\n"
-}
-
-pause_function(){
-	echo
-	print_line
-	  read -p "Presiona enter para continuar..."
-}
-
-invalid_option(){
-    print_line
-    echo "Opción inválida. Prueba otro."
-    pause_function
-}
-
-read_input_options(){
-    local line
-    local packages
-    if [[ $AUTOMATIC_MODE -eq 1 ]]; then
-      array=("$1")
-    else
-      #printf "%s" "$prompt2"
-      read -r OPTION
-      IFS=' ' read -r -a array <<< "${OPTION}"
-    fi
-    for line in "${array[@]/,/ }"; do
-      if [[ ${line/-/} != "$line" ]]; then
-        for ((i=${line%-*}; i<=${line#*-}; i++)); do
-          packages+=("$i");
-        done
-      else
-        packages+=("$line")
-      fi
-    done
-    OPTIONS=("${packages[@]}")
-}
-
-barra(){
-	p(){ c=$(($(tput cols)-3));j=$(($1*c/100)); tput sc;printf "%s [$(for((k=0;k<j;k++));do printf "=";done;)>";tput cuf $((c-j));printf "]";tput rc; };for((i=0; i<=100; i++));do p i;done;echo
-}
+if [[ -f $(pwd)/estilos ]]; then
+	source estilos
+else
+	echo "missing file: estilos"
+	exit 1
+fi
 
 install_grafica(){
   while true; do  
