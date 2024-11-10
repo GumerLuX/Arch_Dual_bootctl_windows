@@ -275,7 +275,7 @@ insatall_arch(){
   print_info "Se copiará el script instalacion en el directorio / root de su nuevo sistema"
   pause_function
   echo
-		cp -rp /root/arch_UEFI.sh /mnt/root/arch_UEFI.sh
+		cp -rp /root/arch_Dual_bootctl_windows /mnt/root/arch_Dual_bootctl_windows
 		echo
   print_info "Desmontando particiones"
   pause_function
