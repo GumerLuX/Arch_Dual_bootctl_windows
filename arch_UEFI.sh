@@ -184,7 +184,7 @@ insatall_arch(){
 	write_header "Instalando el sistema base"
 		    if [ "$sistema" = "1" ]
         then
-      pacstrap -i /mnt base base-devel linux linux-firmware --noconfirm
+      pacstrap -i /mnt base base-devel linux linux-headers linux-firmware --noconfirm
     elif [ "$sistema" = "2" ]
         then
             pacstrap /mnt base base-devel linux linux-hardened linux-hardened-headers linux-firmware --noconfirm
@@ -199,7 +199,7 @@ insatall_arch(){
 	#5-CONFIGURANDO EL SISTEMA
 	write_header "Estamos configurando el sistema"
 	print_info "Anadiendo extras y conplementos para el sistema"
-		pacstrap /mnt f2fs-tool ntfs-3g gvfs gvfs-afc gvfs-mtp espeakup networkmanager dhcpcd netctl s-nail openresolv wpa_supplicant samba xdg-user-dirs nano vi git gpm jfsutils logrotate usbutils neofetch --noconfirm
+		pacstrap /mnt ntfs-3g gvfs gvfs-afc gvfs-mtp espeakup networkmanager dhcpcd netctl s-nail openresolv wpa_supplicant samba xdg-user-dirs nano vi git gpm jfsutils logrotate usbutils neofetch --noconfirm
 		sleep 1
 		genfstab -pU /mnt >> /mnt/etc/fstab
 		cat /mnt/etc/fstab
@@ -228,7 +228,7 @@ insatall_arch(){
   pause_function
 		arch-chroot /mnt bootctl --path=/boot install
 		echo -e "default  arch\ntimeout  5\neditor  0" > /mnt/boot/loader/loader.conf
-		partuuid=$(blkid -s PARTUUID -o value /dev/"$root")
+		partuuid=$(blkid -s PARTUUID -o value /dev/$root)
 		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot=PARTUUID=$partuuid rw" > /mnt/boot/loader/entries/arch.conf
   print_info "Comprobando el archico loader.conf"
 		cat /mnt/boot/loader/loader.conf
