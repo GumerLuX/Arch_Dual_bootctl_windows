@@ -163,23 +163,23 @@ insatall_arch(){
 	print_info "Configurado el script de instlacion preparamos el sistema para la instalación"
 	# Añadiendo memoria al sistema
 		mount -o remount,size=2G /run/archiso/cowspace
-		sleep 1
+		sleep 2
 	#1-Idioma
 	write_header "Poniendo el teclado en tu idioma"
 		loadkeys "$KEYMAP"
-		sleep 1
+		sleep 2
 	#2-Formateando particiones root y swap
 	write_header "Dar formato a las particiones"
 		mkfs.ext4 -L arch /dev/"$ROOT"
 		mkswap -L swap /dev/"$SWAP"
 		swapon /dev/"$SWAP"
-		sleep 1
+		sleep 3
 	#3-Montando particiones
 	write_header "Montando las particiones creadas"
 		mount /dev/"$ROOT" /mnt
 		mkdir -p /mnt/boot
 		mount /dev/"$BOOT" /mnt/boot
-		sleep 1
+		sleep 3
 	#4-Instalando sistema Base
 	write_header "Instalando el sistema base"
 		    if [ "$sistema" = "1" ]
@@ -200,15 +200,15 @@ insatall_arch(){
 	write_header "Estamos configurando el sistema"
 	print_info "Anadiendo extras y conplementos para el sistema"
 		pacstrap /mnt f2fs-tool ntfs-3g gvfs gvfs-afc gvfs-mtp espeakup networkmanager dhcpcd netctl s-nail openresolv wpa_supplicant samba xdg-user-dirs nano vi git gpm jfsutils logrotate usbutils neofetch --noconfirm
-		sleep 1
+		sleep 2
 		genfstab -pU /mnt >> /mnt/etc/fstab
 		cat /mnt/etc/fstab
-		sleep 1
+		sleep 2
 		echo "$host_name" > /mnt/etc/hostname
 	write_header "Configurando el hosts"
 		echo -e "127.0.0.1       localhost\n::1             localhost\n127.0.0.1       $PC.localhost     $PC" > /mnt/etc/hosts
 		cat /mnt/etc/hosts
-		sleep 1
+		sleep 2
 	write_header "Configurando la Zona Horaria"
 		arch-chroot /mnt ln -s /usr/share/zoneinfo/"$ZONE"/"$SUBZONE" /etc/localtime
 	write_header "Configurando Idioma y locales"
@@ -217,7 +217,7 @@ insatall_arch(){
 		arch-chroot /mnt locale-gen
 		echo KEYMAP="$idioma" > /mnt/etc/vconsole.conf
 		cat /mnt/etc/vconsole.conf
-		sleep 1
+		sleep 2
 	write_header "Actualizando la hora en el sistema"
 		arch-chroot /mnt hwclock -w
 	pause_function
@@ -229,13 +229,13 @@ insatall_arch(){
 		arch-chroot /mnt bootctl --path=/boot install
 		echo -e "default  arch\ntimeout  5\neditor  0" > /mnt/boot/loader/loader.conf
 		partuuid=$(blkid -s PARTUUID -o value /dev/"$root")
-		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot=PARTUUID=${partuuid} rw" > /mnt/boot/loader/entries/arch.conf
+		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot=PARTUUID=$partuuid rw" > /mnt/boot/loader/entries/arch.conf
   print_info "Comprobando el archico loader.conf"
 		cat /mnt/boot/loader/loader.conf
-		sleep 1
+		sleep 5
   print_info "Comprobando el archivo arch.conf"
 		cat /mnt/boot/loader/entries/arch.conf
-		sleep 1
+		sleep 3
   pause_function
 	#7-CONTRASEÑA ROOT
 	write_header "CONTRASEÑA ROOT - https://gumerlux.github.io/Blog.GumerLuX/"
@@ -262,7 +262,7 @@ insatall_arch(){
 		read usuario
   # Crear usuario
   arch-chroot /mnt useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash "$usuario"
-  sleep 1
+  sleep 2
   print_info "  Elegimos la contraseña de nuestro usuario.
     Para entrar en sistema:
     user + password"
