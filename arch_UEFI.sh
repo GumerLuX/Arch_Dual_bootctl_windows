@@ -9,6 +9,8 @@ else
 	exit 1
 fi
 
+setfont ter-132b
+
 select_wifi() {
 	write_header "Configuracion de la red WIFI https://gumerlux.github.io/Blog.GumerLuX/"
 	print_info "Tenemos que obtener los datos de nuestra red wifi"
@@ -184,7 +186,7 @@ insatall_arch(){
 	write_header "Instalando el sistema base"
 		    if [ "$sistema" = "1" ]
         then
-      pacstrap -i /mnt base base-devel linux linux-firmware --noconfirm
+      pacstrap -i /mnt base base-devel linux linux-firmware linux-headers--noconfirm
     elif [ "$sistema" = "2" ]
         then
             pacstrap /mnt base base-devel linux linux-hardened linux-hardened-headers linux-firmware --noconfirm
@@ -199,7 +201,7 @@ insatall_arch(){
 	#5-CONFIGURANDO EL SISTEMA
 	write_header "Estamos configurando el sistema"
 	print_info "Anadiendo extras y conplementos para el sistema"
-		pacstrap /mnt f2fs-tool ntfs-3g gvfs gvfs-afc gvfs-mtp espeakup networkmanager dhcpcd netctl s-nail openresolv wpa_supplicant samba xdg-user-dirs nano vi git gpm jfsutils logrotate usbutils neofetch --noconfirm
+		pacstrap /mnt ntfs-3g nfs-utils gvfs gvfs-afc gvfs-mtp espeakup networkmanager dhcpcd netctl s-nail openresolv wpa_supplicant xdg-user-dirs nano vi git gpm jfsutils logrotate usbutils neofetch --noconfirm
 		sleep 2
 		genfstab -pU /mnt >> /mnt/etc/fstab
 		cat /mnt/etc/fstab
@@ -275,7 +277,7 @@ insatall_arch(){
   print_info "Se copiará el script instalacion en el directorio / root de su nuevo sistema"
   pause_function
   echo
-		cp -rp /root/arch_UEFI.sh /mnt/root/arch_UEFI.sh
+		cp -rp /root/Arch_Dual_bootctl_windows /mnt/root/Arch_Dual_bootctl_windows
 		echo
   print_info "Desmontando particiones"
   pause_function
