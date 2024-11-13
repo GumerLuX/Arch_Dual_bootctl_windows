@@ -1,4 +1,4 @@
-!#bin bash
+#!bin bash
 
 #6-INSTALACION system-boot - UEFI - bootctl 
 	write_header "INSTALACION systen-boot - UEFI - https://gumerlux.github.io/Blog.GumerLuX/"
