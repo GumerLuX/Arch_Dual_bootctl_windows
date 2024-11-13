@@ -1,0 +1,21 @@
+
+
+#6-INSTALACION system-boot - UEFI - bootctl 
+	write_header "INSTALACION systen-boot - UEFI - https://gumerlux.github.io/Blog.GumerLuX/"
+  print_info "  Vamos a instalar el cargador de arranque bootctl.\nPues vamos a ello y continuemos."
+  pause_function
+		arch-chroot /mnt bootctl --path=/boot install
+		echo -e "default  arch\ntimeout  5\neditor  0" > /mnt/boot/loader/loader.conf
+<<<<<<< HEAD
+		partuuid=$(blkid -s PARTUUID -o value /dev/"$root")
+=======
+		partuuid=$(blkid -s PARTUUID -o value /dev/$root)
+>>>>>>> 7b38bc9a3bd6326299fe016cab12b27e0978be9c
+		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot=PARTUUID=$partuuid rw" > /mnt/boot/loader/entries/arch.conf
+  print_info "Comprobando el archico loader.conf"
+		cat /mnt/boot/loader/loader.conf
+		sleep 5
+  print_info "Comprobando el archivo arch.conf"
+		cat /mnt/boot/loader/entries/arch.conf
+		sleep 3
+  pause_function
