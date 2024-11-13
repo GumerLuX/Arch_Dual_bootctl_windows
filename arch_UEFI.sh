@@ -186,11 +186,7 @@ insatall_arch(){
 	write_header "Instalando el sistema base"
 		    if [ "$sistema" = "1" ]
         then
-<<<<<<< HEAD
       pacstrap -i /mnt base base-devel linux linux-firmware linux-headers--noconfirm
-=======
-      pacstrap -i /mnt base base-devel linux linux-headers linux-firmware --noconfirm
->>>>>>> 7b38bc9a3bd6326299fe016cab12b27e0978be9c
     elif [ "$sistema" = "2" ]
         then
             pacstrap /mnt base base-devel linux linux-hardened linux-hardened-headers linux-firmware --noconfirm
@@ -205,13 +201,8 @@ insatall_arch(){
 	#5-CONFIGURANDO EL SISTEMA
 	write_header "Estamos configurando el sistema"
 	print_info "Anadiendo extras y conplementos para el sistema"
-<<<<<<< HEAD
 		pacstrap /mnt ntfs-3g nfs-utils gvfs gvfs-afc gvfs-mtp espeakup networkmanager dhcpcd netctl s-nail openresolv wpa_supplicant xdg-user-dirs nano vi git gpm jfsutils logrotate usbutils neofetch --noconfirm
 		sleep 2
-=======
-		pacstrap /mnt ntfs-3g gvfs gvfs-afc gvfs-mtp espeakup networkmanager dhcpcd netctl s-nail openresolv wpa_supplicant samba xdg-user-dirs nano vi git gpm jfsutils logrotate usbutils neofetch --noconfirm
-		sleep 1
->>>>>>> 7b38bc9a3bd6326299fe016cab12b27e0978be9c
 		genfstab -pU /mnt >> /mnt/etc/fstab
 		cat /mnt/etc/fstab
 		sleep 2
@@ -239,11 +230,7 @@ insatall_arch(){
   pause_function
 		arch-chroot /mnt bootctl --path=/boot install
 		echo -e "default  arch\ntimeout  5\neditor  0" > /mnt/boot/loader/loader.conf
-<<<<<<< HEAD
 		partuuid=$(blkid -s PARTUUID -o value /dev/"$root")
-=======
-		partuuid=$(blkid -s PARTUUID -o value /dev/$root)
->>>>>>> 7b38bc9a3bd6326299fe016cab12b27e0978be9c
 		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot=PARTUUID=$partuuid rw" > /mnt/boot/loader/entries/arch.conf
   print_info "Comprobando el archico loader.conf"
 		cat /mnt/boot/loader/loader.conf
@@ -290,11 +277,8 @@ insatall_arch(){
   print_info "Se copiará el script instalacion en el directorio / root de su nuevo sistema"
   pause_function
   echo
-<<<<<<< HEAD
+		cd ..
 		cp -rp /root/Arch_Dual_bootctl_windows /mnt/root/Arch_Dual_bootctl_windows
-=======
-		cp -rp /root/arch_Dual_bootctl_windows /mnt/root/arch_Dual_bootctl_windows
->>>>>>> 7b38bc9a3bd6326299fe016cab12b27e0978be9c
 		echo
   print_info "Desmontando particiones"
   pause_function
