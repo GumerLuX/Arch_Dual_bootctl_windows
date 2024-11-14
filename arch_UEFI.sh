@@ -9,7 +9,7 @@ else
 	exit 1
 fi
 
-setfont ter-132b
+setfont ter-132n
 
 select_wifi() {
 	write_header "Configuracion de la red WIFI https://gumerlux.github.io/Blog.GumerLuX/"
@@ -98,6 +98,7 @@ configure_mirrorlist(){
 			print_info "Escoge el codigo de tu pais de preferencia ej: (FR) para 'Francia'"
 			echo -e "$purple(*)$blue Tu codigo es:${fin}"
 			read CODE_mirror
+			cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.copia
 			reflector --country ${CODE_mirror} --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
 		fi
 }
@@ -167,8 +168,9 @@ insatall_arch(){
 		mount -o remount,size=2G /run/archiso/cowspace
 		sleep 2
 	#1-Idioma
-	write_header "Poniendo el teclado en tu idioma"
+	write_header "Poniendo el teclado en tu idioma i actualizar la hora"
 		loadkeys "$KEYMAP"
+		timedatectl set-ntp true
 		sleep 2
 	#2-Formateando particiones root y swap
 	write_header "Dar formato a las particiones"
@@ -186,7 +188,7 @@ insatall_arch(){
 	write_header "Instalando el sistema base"
 		    if [ "$sistema" = "1" ]
         then
-      pacstrap -i /mnt base base-devel linux linux-firmware linux-headers--noconfirm
+      pacstrap -i /mnt base linux linux-firmware neovim iwd--noconfirm
     elif [ "$sistema" = "2" ]
         then
             pacstrap /mnt base base-devel linux linux-hardened linux-hardened-headers linux-firmware --noconfirm
@@ -217,7 +219,7 @@ insatall_arch(){
 		sed -i "/"$LOCALE".UTF/s/^#//g" /mnt/etc/locale.gen
 		echo LANG="$LOCALE".UTF-8 > /mnt/etc/locale.conf
 		arch-chroot /mnt locale-gen
-		echo KEYMAP="$idioma" > /mnt/etc/vconsole.conf
+		echo KEYMAP="$KEYMAP" > /mnt/etc/vconsole.conf
 		cat /mnt/etc/vconsole.conf
 		sleep 2
 	write_header "Actualizando la hora en el sistema"
@@ -230,7 +232,7 @@ insatall_arch(){
   pause_function
 		arch-chroot /mnt bootctl --path=/boot install
 		echo -e "default  arch\ntimeout  5\neditor  0" > /mnt/boot/loader/loader.conf
-		partuuid=$(blkid -s PARTUUID -o value /dev/"$root")
+		partuuid=$(blkid -s PARTUUID -o value /dev/$root)
 		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\t$root=PARTUUID=$partuuid rw" > /mnt/boot/loader/entries/arch.conf
   print_info "Comprobando el archico loader.conf"
 		cat /mnt/boot/loader/loader.conf
@@ -279,6 +281,9 @@ insatall_arch(){
   echo
 		cd ..
 		cp -rp /root/Arch_Dual_bootctl_windows /mnt/root/Arch_Dual_bootctl_windows
+		cp -r /etc/pacman.d/mirrorlist.copia /mnt/etc/pacman.d/mirrorlist.copia
+		ls /mnt/root/Arch_Dual_bootctl_windows
+  pause_function
 		echo
   print_info "Desmontando particiones"
   pause_function
