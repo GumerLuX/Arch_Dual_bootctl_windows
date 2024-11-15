@@ -9,7 +9,7 @@ else
 	exit 1
 fi
 
-setfont ter-132n
+setfont ter-122n
 
 select_wifi() {
 	write_header "Configuracion de la red WIFI https://gumerlux.github.io/Blog.GumerLuX/"
@@ -188,7 +188,7 @@ insatall_arch(){
 	write_header "Instalando el sistema base"
 		    if [ "$sistema" = "1" ]
         then
-      pacstrap -i /mnt base linux linux-firmware neovim iwd--noconfirm
+      pacstrap -i /mnt base linux linux-firmware --noconfirm
     elif [ "$sistema" = "2" ]
         then
             pacstrap /mnt base base-devel linux linux-hardened linux-hardened-headers linux-firmware --noconfirm
@@ -203,7 +203,8 @@ insatall_arch(){
 	#5-CONFIGURANDO EL SISTEMA
 	write_header "Estamos configurando el sistema"
 	print_info "Anadiendo extras y conplementos para el sistema"
-		pacstrap /mnt ntfs-3g nfs-utils gvfs gvfs-afc gvfs-mtp espeakup networkmanager dhcpcd netctl s-nail openresolv wpa_supplicant xdg-user-dirs nano vi git gpm jfsutils logrotate usbutils neofetch --noconfirm
+		pacstrap /mnt ntfs-3g nfs-utils networkmanager dhcpcd netctl wpa_supplicant xdg-user-dirs nano vi git gpm neofetch --noconfirm
+		# gvfs gvfs-afc gvfs-mtp espeakup s-nail openresolv jfsutils logrotate usbutils
 		sleep 2
 		genfstab -pU /mnt >> /mnt/etc/fstab
 		cat /mnt/etc/fstab
@@ -232,11 +233,11 @@ insatall_arch(){
   pause_function
 		arch-chroot /mnt bootctl --path=/boot install
 		echo -e "default  arch\ntimeout  5\neditor  0" > /mnt/boot/loader/loader.conf
-		partuuid=$(blkid -s PARTUUID -o value /dev/$root)
-		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\t$root=PARTUUID=$partuuid rw" > /mnt/boot/loader/entries/arch.conf
+		partuuid=$(blkid -s PARTUUID -o value /dev/$ROOT)
+		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\t$ROOT=PARTUUID=$partuuid rw" > /mnt/boot/loader/entries/arch.conf
   print_info "Comprobando el archico loader.conf"
 		cat /mnt/boot/loader/loader.conf
-		sleep 5
+		sleep 3
   print_info "Comprobando el archivo arch.conf"
 		cat /mnt/boot/loader/entries/arch.conf
 		sleep 3
@@ -280,8 +281,8 @@ insatall_arch(){
   pause_function
   echo
 		cd ..
-		cp -rp /root/Arch_Dual_bootctl_windows /mnt/root/Arch_Dual_bootctl_windows
-		cp -r /etc/pacman.d/mirrorlist.copia /mnt/etc/pacman.d/mirrorlist.copia
+		cp -R /root/Arch_Dual_bootctl_windows /mnt/root/Arch_Dual_bootctl_windows
+		cp -R /etc/pacman.d/mirrorlist.copia /mnt/etc/pacman.d/mirrorlist.copia
 		ls /mnt/root/Arch_Dual_bootctl_windows
   pause_function
 		echo
