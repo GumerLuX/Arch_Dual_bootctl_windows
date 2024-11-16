@@ -75,7 +75,8 @@ configure_zona_horaria(){
 
 configure_mirrorlist(){
 	write_header "Configuramos los mirrors mas rapidos de ArchLinux"
-	print_info "Hay varias manera de actualizar los mirrorlist:\nUsaremos reflector ycon dos posivilidades"
+	print_info "Hay varias manera de actualizar los mirrorlist:\nUsaremos reflector y con dos posivilidades"
+			cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.copia
 	sleep 1
 	echo -e "1. ${Yellow}Los 10 servidores mas rapidos de todos${fin}"
 	sleep 1
@@ -98,7 +99,6 @@ configure_mirrorlist(){
 			print_info "Escoge el codigo de tu pais de preferencia ej: (FR) para 'Francia'"
 			echo -e "$purple(*)$blue Tu codigo es:${fin}"
 			read CODE_mirror
-			cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.copia
 			reflector --country ${CODE_mirror} --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
 		fi
 }
@@ -135,12 +135,12 @@ configure_disco(){
 
 	write_header "Creadas las particiones vamos a anotar nuestros discos para la instalacion en modo UEFI"
 	fdisk -l /dev/$DISCO
-	print_info "Cual es tu particion 'root' ej: [${Yellow}sda4${fin}]"
+	print_info "Cual es tu particion 'root' ej: [${Yellow}sda3${fin}]"
 	read ROOT
 
 	write_header "Creadas las particiones vamos a anotar nuestros discos para la instalacion en modo UEFI"
 	fdisk -l /dev/$DISCO
-	print_info "Cual es tu particion 'swap' ej: [${Yellow}sda5${fin}]"
+	print_info "Cual es tu particion 'swap' ej: [${Yellow}sda4${fin}]"
 	read SWAP
 	pause_function
 }
@@ -177,13 +177,13 @@ insatall_arch(){
 		mkfs.ext4 -L arch /dev/"$ROOT"
 		mkswap -L swap /dev/"$SWAP"
 		swapon /dev/"$SWAP"
-		sleep 3
+		pause_function
 	#3-Montando particiones
 	write_header "Montando las particiones creadas"
 		mount /dev/"$ROOT" /mnt
 		mkdir -p /mnt/boot
 		mount /dev/"$BOOT" /mnt/boot
-		sleep 3
+		pause_function
 	#4-Instalando sistema Base
 	write_header "Instalando el sistema base"
 		    if [ "$sistema" = "1" ]
@@ -281,8 +281,7 @@ insatall_arch(){
   pause_function
   echo
 		cd ..
-		cp -R /root/Arch_Dual_bootctl_windows /mnt/root/Arch_Dual_bootctl_windows
-		cp -R /etc/pacman.d/mirrorlist.copia /mnt/etc/pacman.d/mirrorlist.copia
+		cp -R Arch_Dual_bootctl_windows /mnt/root/Arch_Dual_bootctl_windows
 		ls /mnt/root/Arch_Dual_bootctl_windows
   pause_function
 		echo
