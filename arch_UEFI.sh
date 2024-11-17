@@ -183,8 +183,8 @@ insatall_arch(){
 	#3-Montando particiones
 	write_header "Montando las particiones creadas"
 		mount /dev/"$ROOT" /mnt
-		mkdir -p /mnt/boot/efi /mnt
-		mount /dev/"$BOOT" /mnt/boot/efi
+		mkdir -p /mnt/boot/ /mnt
+		mount /dev/"$BOOT" /mnt/boot
 		print_info "Comprobando pas particiones montadas"
 		lsblk
 		pause_function
@@ -231,14 +231,14 @@ insatall_arch(){
 		arch-chroot /mnt hwclock -w
 	pause_function
 
-	#6-INSTALACION system-boot - UEFI
+	#6-INSTALACION EFI_MOUNTPOINT
 	write_header "INSTALACION systen-boot - UEFI - https://gumerlux.github.io/Blog.GumerLuX/"
   print_info "  Vamos a instalar el cargador de arranque bootctl.\nPues vamos a ello y continuemos."
   pause_function
 		arch-chroot /mnt bootctl --path=/boot install
 		echo -e "default  arch\ntimeout  5\neditor  0" > /mnt/boot/loader/loader.conf
 		partuuid=$(blkid -s PARTUUID -o value /dev/$ROOT)
-		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\t$ROOT=PARTUUID=$partuuid rw" > /mnt/boot/loader/entries/arch.conf
+		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot=PARTUUID=$partuuid rw" > /mnt/boot/loader/entries/arch.conf
   print_info "Comprobando el archico loader.conf"
 		cat /mnt/boot/loader/loader.conf
 		sleep 3
@@ -284,9 +284,8 @@ insatall_arch(){
   print_info "Se copiará el script instalacion en el directorio / root de su nuevo sistema"
   pause_function
   echo
-		cd ..
-		cp -R Arch_Dual_bootctl_windows /mnt/root/Arch_Dual_bootctl_windows
-		ls /mnt/root/Arch_Dual_bootctl_windows
+		cp -R "$(pwd)" /mnt/root
+		ls /mnt/root/
   pause_function
 		echo
   print_info "Desmontando particiones"
