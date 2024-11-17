@@ -177,12 +177,16 @@ insatall_arch(){
 		mkfs.ext4 -L arch /dev/"$ROOT"
 		mkswap -L swap /dev/"$SWAP"
 		swapon /dev/"$SWAP"
+		print_info "Comprobando las particiones"
+		fdisk -l /dev/$DISCO
 		pause_function
 	#3-Montando particiones
 	write_header "Montando las particiones creadas"
 		mount /dev/"$ROOT" /mnt
 		mkdir -p /mnt/boot/efi /mnt
 		mount /dev/"$BOOT" /mnt/boot/efi
+		print_info "Comprobando pas particiones montadas"
+		lsblk
 		pause_function
 	#4-Instalando sistema Base
 	write_header "Instalando el sistema base"
@@ -194,7 +198,7 @@ insatall_arch(){
             pacstrap /mnt base base-devel linux linux-hardened linux-hardened-headers linux-firmware --noconfirm
     elif [ "$sistema" = "3" ]
         then
-            pacstrap /mnt base base-devel linux linux-lts linux-lts-headers linux-firmware--noconfirm
+            pacstrap /mnt base base-devel linux linux-lts linux-lts-headers linux-firmware  --noconfirm
     elif [ "$sistema" = "4" ]
         then
             pacstrap /mnt base base-devel linux linux-zen linux-zen-headers linux-firmware --noconfirm
@@ -203,7 +207,7 @@ insatall_arch(){
 	#5-CONFIGURANDO EL SISTEMA
 	write_header "Estamos configurando el sistema"
 	print_info "Anadiendo extras y conplementos para el sistema"
-		pacstrap /mnt ntfs-3g nfs-utils networkmanager dhcpcd netctl wpa_supplicant xdg-user-dirs nano vi git gpm neofetch --noconfirm
+		pacstrap /mnt ntfs-3g nfs-utils networkmanager dhcpcd netctl wpa_supplicant xdg-user-dirs nano git gpm neofetch --noconfirm
 		# gvfs gvfs-afc gvfs-mtp espeakup s-nail openresolv jfsutils logrotate usbutils
 		sleep 2
 		genfstab -pU /mnt >> /mnt/etc/fstab

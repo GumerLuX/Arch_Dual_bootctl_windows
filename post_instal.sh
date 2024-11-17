@@ -10,8 +10,6 @@ else
 	exit 1
 fi
 
-setfont ter-132b
-
 install_grafica(){
   while true; do  
   write_header "CONFIGURACION DEL SISTEMA GRAFICO - https://gumerlux.github.io/Blog.GumerLuX/"
@@ -79,26 +77,26 @@ install_escritorio(){
     if [ "$op" ]; then
       case $op in
         1)
-        sudo pacman -Sy xfce4 xfce4-goodies network-manager-applet
-        sudo pacman -Sy lightdm-gtk-greeter
+        sudo pacman -Sy xfce4 xfce4-goodies network-manager-applet --noconfirm
+        sudo pacman -Sy lightdm-gtk-greeter --noconfirm
         systemctl enable lightdm.service
         ;;
         2)
-        sudo pacman -Sy gnome gnome-extra gnome-tweak-tool
-        sudo pacman -Sy gdm
+        sudo pacman -Sy gnome gnome-extra gnome-tweak-tool --noconfirm
+        sudo pacman -Sy gdm --noconfirm
         systemctl enable gdm.service
         ;;
         3)
         pause_function
-        sudo pacman -Sy plasma-desktop plasma-meta ark egl-wayland kwrite plasma-workspase dolphin konsole
-        sudo pacman -Sy plasma-wayland-session ffmpegthumbs discover packagekit-qt5
+        sudo pacman -Sy plasma-desktop plasma-meta ark egl-wayland kwrite plasma-workspase dolphin konsole --noconfirm
+        sudo pacman -Sy plasma-wayland-session ffmpegthumbs discover packagekit-qt5 --noconfirm
         pause_function
         systemctl enable sddm.service
         pause_function
         ;;
         4)
-        sudo pacman -Sy cinnamon
-        sudo pacman -Sy lightdm-gtk-greeter
+        sudo pacman -Sy cinnamon --noconfirm
+        sudo pacman -Sy lightdm-gtk-greeter --noconfirm
         systemctl enable lightdm.service
         ;;
 		5)
@@ -152,15 +150,15 @@ select_root(){
   #Instalamos codecs de audio
   write_header "CONFIGURACION ROOT - https://gumerlux.github.io/Blog.GumerLuX/"
   print_info "  Instalamos codecs de audio."
-  pacman -Sy pulseaudio pulseaudio-alsa alsa-utils alsa-plugins
+  pacman -S pulseaudio pulseaudio-alsa alsa-utils alsa-plugins --noconfirm
   pause_function
 
   #Instalamos servidor grafico, XORG Y MESA
   write_header "CONFIGURACION ROOT - https://gumerlux.github.io/Blog.GumerLuX/"
   print_info "  Instalamos servidor grafico mesa y la Grafica.
     "
-  pacman -S xorg xorg-xinit mesa mesa-demos
-  pacman -S xorg-server xorg-xinit xorg-utils xorg-server-utils mesa mesa-demos
+  pacman -S xorg xorg-xinit mesa mesa-demos --noconfirm
+  pacman -S xorg-server xorg-xinit xorg-utils xorg-server-utils mesa mesa-demos --noconfirm
   # xorg-server xorg-apps xorg-xinit xorg-xkill xorg-xinput xf86-input-libinput
   pause_function
 
@@ -179,11 +177,11 @@ select_root(){
   print_info "Se completo la configuracion de root.
   Salga del script y de root, y entre como usuario, para su configuracion."
   print_line
-  print_info "Se copiará una copia del script Arch1 en el directorio / home/user de su nuevo sistema"
+  print_info "Se copiará una copia del script Arch_Dual_bootctl_windows en el directorio / home/user de su nuevo sistema"
   pause_function
   echo
-  cd .. && cp -rp arch1 ~/arch1
-  chown sindo ~/arch1
+  cd .. && cp -rp Arch_Dual_bootctl_windows ~/Arch_Dual_bootctl_windows
+  chown sindo ~/Arch_Dual_bootctl_windows
   echo
   print_info "Saliendo del script"
   return
@@ -218,7 +216,7 @@ select_root(){
   Añadiremos unos programas necesarios para su utilizacion.
   Utilidades de bash, compresion, DNS, disco 'NTFS/EXT."
   pause_function
-  sudo pacman -Sy bc rsync mlocate bash-completion pkgstats arch-wiki-lite zip unzip unrar p7zip lzop cpio avahi nss-mdns dosfstools exfat-utils f2fs-tools fuse fuse-exfat autofs mtpfs 
+  sudo pacman -S bc rsync mlocate bash-completion pkgstats arch-wiki-lite zip unzip unrar p7zip lzop cpio avahi nss-mdns dosfstools exfat-utils f2fs-tools fuse fuse-exfat autofs mtpfs --noconfirm
   system_ctl enable avahi-daemon.service
   timedatectl set-ntp true
 
@@ -234,7 +232,7 @@ select_root(){
   Primero hacemos una copia de seguridad. Instalamos el programa reflector"
   pause_function
   sudo cp -vf /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
-  sudo pacman -Sy reflector 
+  sudo pacman -S reflector 
   sudo reflector --verbose --latest 5 --sort rate --save /etc/pacman.d/mirrorlist
   sudo pacman -Syy 
 
@@ -248,7 +246,7 @@ select_root(){
   mkdir ~/repos
   cd ~/repos && git clone https://aur.archlinux.org/yay.git
   cd yay/ && makepkg -si
-  alias cda="cd ~/arch1"
+  alias cda="cd ~/Arch_Dual_Bootctl_windows"
   cda
   
   # Configuracion de Pacman, color y ponemos el comococos en la barra
