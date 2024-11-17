@@ -9,7 +9,7 @@ else
 	exit 1
 fi
 
-setfont ter-132b
+setfont ter-122n
 
 select_wifi() {
 	write_header "Configuracion de la red WIFI https://gumerlux.github.io/Blog.GumerLuX/"
@@ -75,7 +75,8 @@ configure_zona_horaria(){
 
 configure_mirrorlist(){
 	write_header "Configuramos los mirrors mas rapidos de ArchLinux"
-	print_info "Hay varias manera de actualizar los mirrorlist:\nUsaremos reflector ycon dos posivilidades"
+	print_info "Hay varias manera de actualizar los mirrorlist:\nUsaremos reflector y con dos posivilidades"
+			cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.copia
 	sleep 1
 	echo -e "1. ${Yellow}Los 10 servidores mas rapidos de todos${fin}"
 	sleep 1
@@ -134,12 +135,12 @@ configure_disco(){
 
 	write_header "Creadas las particiones vamos a anotar nuestros discos para la instalacion en modo UEFI"
 	fdisk -l /dev/$DISCO
-	print_info "Cual es tu particion 'root' ej: [${Yellow}sda4${fin}]"
+	print_info "Cual es tu particion 'root' ej: [${Yellow}sda3${fin}]"
 	read ROOT
 
 	write_header "Creadas las particiones vamos a anotar nuestros discos para la instalacion en modo UEFI"
 	fdisk -l /dev/$DISCO
-	print_info "Cual es tu particion 'swap' ej: [${Yellow}sda5${fin}]"
+	print_info "Cual es tu particion 'swap' ej: [${Yellow}sda4${fin}]"
 	read SWAP
 	pause_function
 }
@@ -167,26 +168,27 @@ insatall_arch(){
 		mount -o remount,size=2G /run/archiso/cowspace
 		sleep 2
 	#1-Idioma
-	write_header "Poniendo el teclado en tu idioma"
+	write_header "Poniendo el teclado en tu idioma i actualizar la hora"
 		loadkeys "$KEYMAP"
+		timedatectl set-ntp true
 		sleep 2
 	#2-Formateando particiones root y swap
 	write_header "Dar formato a las particiones"
 		mkfs.ext4 -L arch /dev/"$ROOT"
 		mkswap -L swap /dev/"$SWAP"
 		swapon /dev/"$SWAP"
-		sleep 3
+		pause_function
 	#3-Montando particiones
 	write_header "Montando las particiones creadas"
 		mount /dev/"$ROOT" /mnt
 		mkdir -p /mnt/boot/efi /mnt
 		mount /dev/"$BOOT" /mnt/boot/efi
-		sleep 3
+		pause_function
 	#4-Instalando sistema Base
 	write_header "Instalando el sistema base"
 		    if [ "$sistema" = "1" ]
         then
-      pacstrap -i /mnt base base-devel linux linux-firmware linux-headers--noconfirm
+      pacstrap -i /mnt base base-devel linux linux-firmware linux-headers --noconfirm
     elif [ "$sistema" = "2" ]
         then
             pacstrap /mnt base base-devel linux linux-hardened linux-hardened-headers linux-firmware --noconfirm
@@ -201,7 +203,8 @@ insatall_arch(){
 	#5-CONFIGURANDO EL SISTEMA
 	write_header "Estamos configurando el sistema"
 	print_info "Anadiendo extras y conplementos para el sistema"
-		pacstrap /mnt ntfs-3g nfs-utils gvfs gvfs-afc gvfs-mtp espeakup networkmanager dhcpcd netctl s-nail openresolv wpa_supplicant xdg-user-dirs nano vi git gpm jfsutils logrotate usbutils neofetch --noconfirm
+		pacstrap /mnt ntfs-3g nfs-utils networkmanager dhcpcd netctl wpa_supplicant xdg-user-dirs nano vi git gpm neofetch --noconfirm
+		# gvfs gvfs-afc gvfs-mtp espeakup s-nail openresolv jfsutils logrotate usbutils
 		sleep 2
 		genfstab -pU /mnt >> /mnt/etc/fstab
 		cat /mnt/etc/fstab
@@ -217,7 +220,7 @@ insatall_arch(){
 		sed -i "/"$LOCALE".UTF/s/^#//g" /mnt/etc/locale.gen
 		echo LANG="$LOCALE".UTF-8 > /mnt/etc/locale.conf
 		arch-chroot /mnt locale-gen
-		echo KEYMAP="$idioma" > /mnt/etc/vconsole.conf
+		echo KEYMAP="$KEYMAP" > /mnt/etc/vconsole.conf
 		cat /mnt/etc/vconsole.conf
 		sleep 2
 	write_header "Actualizando la hora en el sistema"
@@ -230,11 +233,11 @@ insatall_arch(){
   pause_function
 		arch-chroot /mnt bootctl --path=/boot install
 		echo -e "default  arch\ntimeout  5\neditor  0" > /mnt/boot/loader/loader.conf
-		partuuid=$(blkid -s PARTUUID -o value /dev/"$root")
-		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot=PARTUUID=$partuuid rw" > /mnt/boot/loader/entries/arch.conf
+		partuuid=$(blkid -s PARTUUID -o value /dev/$ROOT)
+		echo -e "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\t$ROOT=PARTUUID=$partuuid rw" > /mnt/boot/loader/entries/arch.conf
   print_info "Comprobando el archico loader.conf"
 		cat /mnt/boot/loader/loader.conf
-		sleep 5
+		sleep 3
   print_info "Comprobando el archivo arch.conf"
 		cat /mnt/boot/loader/entries/arch.conf
 		sleep 3
@@ -277,7 +280,10 @@ insatall_arch(){
   print_info "Se copiará el script instalacion en el directorio / root de su nuevo sistema"
   pause_function
   echo
-		cp -rp /root/Arch_Dual_bootctl_windows /mnt/root/Arch_Dual_bootctl_windows
+		cd ..
+		cp -R Arch_Dual_bootctl_windows /mnt/root/Arch_Dual_bootctl_windows
+		ls /mnt/root/Arch_Dual_bootctl_windows
+  pause_function
 		echo
   print_info "Desmontando particiones"
   pause_function
