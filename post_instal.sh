@@ -10,6 +10,8 @@ else
 	exit 1
 fi
 
+setfont ter-122n
+
 install_grafica(){
   while true; do  
   write_header "CONFIGURACION DEL SISTEMA GRAFICO - https://gumerlux.github.io/Blog.GumerLuX/"
@@ -28,22 +30,22 @@ install_grafica(){
     if [ "$op" ]; then
       case $op in
         1)
-        pacman -Sy nvidia nvidia-settings
+        pacman -S nvidia nvidia-settings --noconfirm
         ;;
         2)
-        pacman -Sy xf86-video-nouveau
+        pacman -S xf86-video-nouveau --noconfirm
         ;;
         3)
-        pacman -Sy xf86-video-ati
+        pacman -S xf86-video-ati --noconfirm
         ;;
         4)
-        pacman -Sy xf86-video-amdgpu amd-ucode
+        pacman -S xf86-video-amdgpu amd-ucode --noconfirm
         ;;
         5)
-        pacman -Sy intel-media-driver mesa xorg-server libva-intel-driver vulkan-intel xorg-xinit
+        pacman -S intel-media-driver mesa xorg-server libva-intel-driver vulkan-intel xorg-xinit --noconfirm
         ;;
         6)
-        pacman -Sy virtualbox-guest-utils xf86-video-vmware
+        pacman -S virtualbox-guest-utils xf86-video-vmware --noconfirm
         systemctl start vboxservice
         systemctl enable vboxservice
         ;;
@@ -67,7 +69,7 @@ install_escritorio(){
   echo
   echo -e "   1.Escritorio${Yellow} Xfce ${fin}"
   echo -e "   2.Escritorio${Yellow} Gnome ${fin}"
-  echo -e "   3.Escritorio${Yellow} Kde Plasma minima ${fin}"
+  echo -e "   3.Escritorio${Yellow} Kde Plasma minimo ${fin}"
   echo -e "   4.Escritorio${Yellow} Cinnamon ${fin}"
   echo -e "   5.Escritorio${Yellow} Hyprland ${fin}"
   echo
@@ -77,31 +79,31 @@ install_escritorio(){
     if [ "$op" ]; then
       case $op in
         1)
-        sudo pacman -Sy xfce4 xfce4-goodies network-manager-applet --noconfirm
-        sudo pacman -Sy lightdm-gtk-greeter --noconfirm
+        sudo pacman -S xfce4 xfce4-goodies network-manager-applet --noconfirm
+        sudo pacman -S lightdm-gtk-greeter --noconfirm
         systemctl enable lightdm.service
         ;;
         2)
-        sudo pacman -Sy gnome gnome-extra gnome-tweak-tool --noconfirm
-        sudo pacman -Sy gdm --noconfirm
+        sudo pacman -S gnome gnome-extra gnome-tweak-tool --noconfirm
+        sudo pacman -S gdm --noconfirm
         systemctl enable gdm.service
         ;;
         3)
         pause_function
-        sudo pacman -Sy plasma-desktop plasma-meta ark egl-wayland kwrite plasma-workspase dolphin konsole --noconfirm
-        sudo pacman -Sy plasma-wayland-session ffmpegthumbs discover packagekit-qt5 --noconfirm
+        sudo pacman -S plasma-desktop egl-wayland kwrite dolphin konsole --noconfirm
+        sudo pacman -S plasma-wayland-session ffmpegthumbs discover packagekit-qt5 --noconfirm
         pause_function
         systemctl enable sddm.service
         pause_function
         ;;
         4)
-        sudo pacman -Sy cinnamon --noconfirm
-        sudo pacman -Sy lightdm-gtk-greeter --noconfirm
+        sudo pacman -S cinnamon --noconfirm
+        sudo pacman -S lightdm-gtk-greeter --noconfirm
         systemctl enable lightdm.service
         ;;
 		5)
-        sudo pacman -Sy Hyprland dolphin wofi qt5-wayland dunst kitty --noconfirm
-        sudo pacman -Sy qt6-wayland xdg-destop-portal-hyprland grim polkit-kde-agent slurp --noconfirm
+        sudo pacman -S Hyprland dolphin wofi qt5-wayland dunst kitty --noconfirm
+        sudo pacman -S qt6-wayland xdg-destop-portal-hyprland grim polkit-kde-agent slurp --noconfirm
         systemctl enable sddm.service
         ;;
         "b")
@@ -150,7 +152,7 @@ select_root(){
   #Instalamos codecs de audio
   write_header "CONFIGURACION ROOT - https://gumerlux.github.io/Blog.GumerLuX/"
   print_info "  Instalamos codecs de audio."
-  pacman -S pulseaudio pulseaudio-alsa alsa-utils alsa-plugins --noconfirm
+  pacman -S pulseaudio pulseaudio-alsa alsa-utils alsa-plugins pipewire pipewire-docs --noconfirm
   pause_function
 
   #Instalamos servidor grafico, XORG Y MESA
@@ -180,7 +182,8 @@ select_root(){
   print_info "Se copiará una copia del script Arch_Dual_bootctl_windows en el directorio / home/user de su nuevo sistema"
   pause_function
   echo
-  cd .. && cp -rp Arch_Dual_bootctl_windows ~/Arch_Dual_bootctl_windows
+  cp -R "$(pwd)" ~/
+	ls ~/
   chown sindo ~/Arch_Dual_bootctl_windows
   echo
   print_info "Saliendo del script"
