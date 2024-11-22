@@ -19,7 +19,11 @@ mount /dev/sda2 /mnt
 mkdir -p /mnt/boot
 mount /dev/sda1 /mnt/boot
 
+reflector --country France --country Germany --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+
 pacstrap /mnt base base-devel nano linux linux-firmware
+
+pacstrap /mnt networkmanager dhcpcd netctl wpa_supplicant nano git neofetch --noconfirm
 
 genfstab -pU /mnt >> /mnt/etc/fstab
 cat /mnt/etc/fstab
@@ -54,6 +58,16 @@ arch-chroot /mnt bootctl --path=/boot install
 		sleep 3
 
 arch-chroot /mnt passwd
+
+echo -e "Escribe tu nombre de usuario:"
+read usuario
+arch-chroot /mnt useradd -m "$usuario"
+arch-chroot /mnt passwd "$usuario"
+sleep 2
+
+cp -R "$(pwd)" ~/"$usuario"
+ls ~/
+chown "$usuario" ~/Arch_Dual_bootctl_windows
 
 umount -R /mnt
 umount -R /mnt/boot
