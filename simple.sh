@@ -1,25 +1,47 @@
 #!/bin/bash
 
-loadkeys es
-timedatectl set-ntp true
-timedatectl status
-lsblk
-fdisk -l
+if [[ -f $(pwd)/estilos ]]; then
+	source estilos
+else
+	echo "missing file: estilos"
+	exit 1
+fi
+
+write_header "Necesitamos saber unos parametros para realizarla instalacion"
+print_info "El mombre de tu PC"
+read host_name
+print_info "El mombre de usuario"
+read usuario
 pause
+
+write_header "Configurarcion del disco"
+print_info "Con cfdisk creamos tres particiones\n1 para boot\n2 para sistema root\3 para intercambio swap"
+cfdisk
+write_header "Con estos datos podemos enpezar la instalacion, comprobando"
+pause
+
+print_info "Formatemos la paricion boot"
+fdisk -l
 mkfs.fat -F32 /dev/sda1
 
+print_info "Formatemos la paricion swap y montamos"
 mkswap /dev/sda3
 swapon /dev/sda3
-sleep 2
 
+print_info "Formatemos la paricion root"
 mkfs.ext4 /dev/sda2
-sleep 2
+pause
 
+print "Montamos las particiones root y boot"
 mount /dev/sda2 /mnt
 mkdir -p /mnt/boot
 mount /dev/sda1 /mnt/boot
+lsblk
+print_info "Ya tenemos el disco preparado para la instalacion, empezemos"
+pause
 
-reflector --country France --country Germany --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+timedatectl set-ntp true
+timedatectl status
 
 pacstrap /mnt base base-devel nano linux linux-firmware
 
@@ -28,7 +50,7 @@ pacstrap /mnt networkmanager dhcpcd netctl wpa_supplicant nano git neofetch --no
 genfstab -pU /mnt >> /mnt/etc/fstab
 cat /mnt/etc/fstab
 sleep 2
-echo "sinlux" > /mnt/etc/hostname
+echo "$host_name" > /mnt/etc/hostname
 
 echo -e "127.0.0.1       localhost\n::1             localhost\n127.0.0.1       $PC.localhost     $PC" > /mnt/etc/hosts
 cat /mnt/etc/hosts
@@ -57,10 +79,11 @@ arch-chroot /mnt bootctl --path=/boot install
 		cat /mnt/boot/loader/entries/arch.conf
 		sleep 3
 
+pause
+
+print_info "Creando contraseña root y usuario"
 arch-chroot /mnt passwd
 
-echo -e "Escribe tu nombre de usuario:"
-read usuario
 arch-chroot /mnt useradd -m "$usuario"
 arch-chroot /mnt passwd "$usuario"
 sleep 2
