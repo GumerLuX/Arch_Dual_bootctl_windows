@@ -12,13 +12,13 @@ print_info "El mombre de tu PC"
 read host_name
 print_info "El mombre de usuario"
 read usuario
-pause
+pause_function
 
 write_header "Configurarcion del disco"
 print_info "Con cfdisk creamos tres particiones\n1 para boot\n2 para sistema root\3 para intercambio swap"
 cfdisk
 write_header "Con estos datos podemos enpezar la instalacion, comprobando"
-pause
+pause_function
 
 print_info "Formatemos la paricion boot"
 fdisk -l
@@ -30,7 +30,7 @@ swapon /dev/sda3
 
 print_info "Formatemos la paricion root"
 mkfs.ext4 /dev/sda2
-pause
+pause_function
 
 print "Montamos las particiones root y boot"
 mount /dev/sda2 /mnt
@@ -38,7 +38,7 @@ mkdir -p /mnt/boot
 mount /dev/sda1 /mnt/boot
 lsblk
 print_info "Ya tenemos el disco preparado para la instalacion, empezemos"
-pause
+pause_function
 
 timedatectl set-ntp true
 timedatectl status
@@ -79,14 +79,17 @@ arch-chroot /mnt bootctl --path=/boot install
 		cat /mnt/boot/loader/entries/arch.conf
 		sleep 3
 
-pause
+pause_function
 
-print_info "Creando contraseña root y usuario"
+print_info "Creando contraseña root"
 arch-chroot /mnt passwd
 
 arch-chroot /mnt useradd -m "$usuario"
+
+print_info "Creando contraseña usuario"
 arch-chroot /mnt passwd "$usuario"
 sleep 2
+pause_function
 
 cp -R "$(pwd)" ~/"$usuario"
 ls ~/
