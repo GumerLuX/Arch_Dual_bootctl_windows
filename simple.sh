@@ -84,11 +84,11 @@ pause
 print_info "Creando contraseña root y usuario"
 arch-chroot /mnt passwd
 
-arch-chroot /mnt useradd -m "$usuario"
+arch-chroot /mnt useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash"$usuario"
 arch-chroot /mnt passwd "$usuario"
 sleep 2
 
-cp -R "$(pwd)" ~/"$usuario"
+cp -R "$(pwd)" ~/
 ls ~/
 chown "$usuario" ~/Arch_Dual_bootctl_windows
 
